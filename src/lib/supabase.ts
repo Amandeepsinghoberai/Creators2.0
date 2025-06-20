@@ -6,34 +6,14 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 console.log('🔧 Supabase Configuration Check:');
 console.log('- URL:', supabaseUrl);
-console.log('- URL length:', supabaseUrl?.length || 0);
 console.log('- Key provided:', !!supabaseAnonKey);
-console.log('- Key length:', supabaseAnonKey?.length || 0);
 
-// More robust validation for real Supabase configuration
-const hasValidSupabaseConfig = supabaseUrl && 
-  supabaseAnonKey && 
-  supabaseUrl.length > 20 && // Real Supabase URLs are longer
-  supabaseAnonKey.length > 50 && // Real anon keys are longer
-  supabaseUrl.includes('supabase.co') &&
-  !supabaseUrl.includes('placeholder') &&
-  !supabaseAnonKey.includes('placeholder') &&
-  !supabaseUrl.includes('your_project_url') &&
-  !supabaseAnonKey.includes('your_anon_key');
-
-console.log('- Valid config:', hasValidSupabaseConfig);
-
-if (!hasValidSupabaseConfig) {
-  console.error('❌ Supabase configuration missing or invalid. Please check your .env file:');
-  console.error('- VITE_SUPABASE_URL should be your project URL (e.g., https://your-project.supabase.co)');
-  console.error('- VITE_SUPABASE_ANON_KEY should be your anon/public key');
-  console.error('- Make sure the .env file is in the root directory');
-  console.error('- Restart the development server after adding environment variables');
-  throw new Error('Supabase configuration is missing or invalid. Please check your environment variables.');
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables. Please check your .env file.');
 }
 
 // Create the Supabase client
-export const supabase = createClient(supabaseUrl!, supabaseAnonKey!, {
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
@@ -47,20 +27,7 @@ export const supabase = createClient(supabaseUrl!, supabaseAnonKey!, {
   }
 });
 
-// Test the connection
 console.log('✅ Supabase client created successfully');
-
-// Test the connection
-supabase.auth.getSession().then(({ data, error }) => {
-  if (error) {
-    console.error('❌ Supabase connection test failed:', error.message);
-  } else {
-    console.log('✅ Supabase connection test successful');
-    console.log('- Session exists:', !!data.session);
-  }
-}).catch((error) => {
-  console.error('❌ Supabase connection error:', error);
-});
 
 export type Profile = {
   id: string;

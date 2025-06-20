@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { Sparkles, Mail, Lock, User, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '/src/hooks/useAuth.ts';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
